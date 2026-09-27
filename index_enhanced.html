@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ساخت سایت و پوستر با هوش مصنوعی</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f0eeff;
+    --bg2: #fce8f3;
+    --purple: #8B7FD4;
+    --pink: #E89AC7;
+    --purple-dark: #6C63C4;
+    --pink-dark: #D97AB5;
+    --text: #2d2440;
+    --text-muted: #8878aa;
+    --glass: rgba(255,255,255,0.35);
+    --glass-border: rgba(255,255,255,0.55);
+    --glass-shadow: 0 8px 32px rgba(139,127,212,0.15);
+    --radius: 20px;
+    --radius-sm: 14px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: linear-gradient(135deg, #e8e4ff 0%, #f5e0f5 50%, #fce8f0 100%);
+    min-height: 100vh;
+    color: var(--text);
+    font-family: 'Vazirmatn', sans-serif;
+    font-weight: 400;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 5vw;
+    background: rgba(255,255,255,0.25);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255,255,255,0.5);
+    border-radius: 0 0 var(--radius) var(--radius);
+    animation: slideDownNav 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes slideDownNav {
+    from { transform: translateY(-100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .nav-logo {
+    font-size: 1.15rem; font-weight: 700;
+    background: linear-gradient(135deg, var(--purple-dark), var(--pink-dark));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    transition: transform 0.3s ease;
+  }
+
+  .nav-logo:hover {
+    transform: scale(1.05) rotate(1deg);
+  }
+
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    color: var(--text); text-decoration: none; font-size: 0.85rem;
+    font-weight: 500; transition: all 0.25s ease;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--purple-dark), var(--pink-dark));
+    transition: width 0.3s ease;
+  }
+  .nav-links a:hover { color: var(--purple-dark); }
+  .nav-links a:hover::after { width: 100%; }
+
+  /* ── LIQUID GLASS BUTTON ── */
+  .btn-glass {
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.45);
+    color: var(--text);
+    padding: 0.75rem 2rem;
+    font-family: 'Vazirmatn', sans-serif; font-size: 0.88rem; font-weight: 600;
+    cursor: pointer; text-decoration: none;
+    border-radius: 100px;
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    box-shadow: 
+      inset 0 1.5px 0 rgba(255,255,255,0.8),
+      inset 0 -1px 0 rgba(139,127,212,0.15),
+      0 2px 8px rgba(139,127,212,0.12),
+      0 8px 24px rgba(139,127,212,0.08);
+    position: relative; overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .btn-glass::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 50%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.4) 0%, transparent 100%);
+    border-radius: 100px 100px 0 0;
+    pointer-events: none;
+  }
+  .btn-glass:hover {
+    background: rgba(255,255,255,0.28);
+    box-shadow: 
+      inset 0 1.5px 0 rgba(255,255,255,0.9),
+      0 4px 16px rgba(139,127,212,0.2),
+      0 12px 32px rgba(139,127,212,0.12);
+    transform: translateY(-2px) scale(1.02);
+  }
+  .btn-glass:active { transform: scale(0.97); }
+
+  .btn-primary-glass {
+    background: linear-gradient(135deg, rgba(139,127,212,0.28), rgba(232,154,199,0.28));
+    border: 1px solid rgba(255,255,255,0.5);
+  }
+  .btn-primary-glass:hover {
+    background: linear-gradient(135deg, rgba(139,127,212,0.4), rgba(232,154,199,0.4));
+  }
+
+  .nav-cta {
+    background: rgba(255,255,255,0.3);
+    border: 1.5px solid rgba(255,255,255,0.6);
+    color: var(--purple-dark); padding: 0.45rem 1.3rem;
+    font-family: 'Vazirmatn', sans-serif; font-size: 0.82rem; font-weight: 600;
+    cursor: pointer; border-radius: 100px;
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7), 0 2px 8px rgba(139,127,212,0.2);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .nav-cta:hover {
+    background: rgba(255,255,255,0.5);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 4px 16px rgba(139,127,212,0.3);
+    transform: translateY(-1px);
+  }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; padding: 8rem 5vw 5rem;
+    position: relative; overflow: hidden;
+  }
+
+  .hero-blob1 {
+    position: absolute; width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(139,127,212,0.25) 0%, transparent 70%);
+    top: -100px; right: -100px; border-radius: 50%; pointer-events: none;
+    animation: float1 8s ease-in-out infinite;
+  }
+
+  .hero-blob2 {
+    position: absolute; width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(232,154,199,0.25) 0%, transparent 70%);
+    bottom: -50px; left: -50px; border-radius: 50%; pointer-events: none;
+    animation: float2 10s ease-in-out infinite;
+  }
+
+  @keyframes float1 {
+    0%, 100% { transform: translateY(0px) translateX(0px); }
+    50% { transform: translateY(30px) translateX(-20px); }
+  }
+
+  @keyframes float2 {
+    0%, 100% { transform: translateY(0px) translateX(0px); }
+    50% { transform: translateY(-40px) translateX(25px); }
+  }
+
+  .hero-content { 
+    position: relative; z-index: 1; max-width: 860px;
+    animation: fadeInUp 0.8s ease-out;
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-eyebrow {
+    display: inline-block; font-size: 0.75rem; letter-spacing: 0.15em;
+    background: rgba(255,255,255,0.4); border: 1.5px solid rgba(255,255,255,0.6);
+    border-radius: 100px; padding: 0.35rem 1.2rem; margin-bottom: 2rem;
+    color: var(--purple-dark); font-weight: 600;
+    backdrop-filter: blur(10px);
+    animation: bounceIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes bounceIn {
+    0% { opacity: 0; transform: scale(0.8); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+
+  h1 {
+    font-size: clamp(2.4rem, 6vw, 5rem); font-weight: 700; line-height: 1.15;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, var(--purple-dark) 0%, var(--pink-dark) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    animation: slideInHeading 0.8s ease-out 0.2s backwards;
+  }
+
+  @keyframes slideInHeading {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-sub {
+    color: var(--text-muted);
+    font-size: clamp(1.1rem, 2vw, 1.3rem);
+    margin-bottom: 2.5rem;
+    animation: slideInHeading 0.8s ease-out 0.4s backwards;
+  }
+
+  .hero-cta {
+    display: flex; gap: 1.2rem; justify-content: center; flex-wrap: wrap;
+    animation: slideInHeading 0.8s ease-out 0.6s backwards;
+  }
+
+  /* ── SERVICES ── */
+  #services {
+    padding: 8rem 5vw;
+    background: rgba(255,255,255,0.15);
+    border-radius: var(--radius);
+    margin: 2rem 2vw;
+  }
+
+  .services-container {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    text-align: center;
+    color: var(--purple);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    animation: fadeInDown 0.6s ease-out;
+  }
+
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-15px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-title {
+    text-align: center;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+  }
+
+  .section-sub {
+    text-align: center;
+    color: var(--text-muted);
+    max-width: 500px;
+    margin: 0 auto 3rem;
+  }
+
+  .services {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .service-card {
+    background: rgba(255,255,255,0.25);
+    border: 1px solid rgba(255,255,255,0.5);
+    backdrop-filter: blur(10px);
+    border-radius: var(--radius);
+    padding: 2.5rem;
+    text-align: center;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    overflow: hidden;
+    animation: scaleInCard 0.6s ease-out;
+  }
+
+  @keyframes scaleInCard {
+    from { opacity: 0; transform: scale(0.9) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .service-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, rgba(139,127,212,0.1) 0%, rgba(232,154,199,0.1) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+
+  .service-card:hover {
+    background: rgba(255,255,255,0.35);
+    border-color: rgba(255,255,255,0.7);
+    transform: translateY(-8px);
+    box-shadow: 0 12px 48px rgba(139,127,212,0.2);
+  }
+
+  .service-card:hover::before {
+    opacity: 1;
+  }
+
+  .service-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(139,127,212,0.15), rgba(232,154,199,0.15));
+    border-radius: 16px;
+    transition: all 0.4s ease;
+    animation: floatIcon 3s ease-in-out infinite;
+  }
+
+  .service-card:nth-child(1) .service-icon { animation-delay: 0s; }
+  .service-card:nth-child(2) .service-icon { animation-delay: 0.2s; }
+  .service-card:nth-child(3) .service-icon { animation-delay: 0.4s; }
+
+  @keyframes floatIcon {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .service-card:hover .service-icon {
+    transform: scale(1.1) rotate(-5deg);
+    background: linear-gradient(135deg, rgba(139,127,212,0.25), rgba(232,154,199,0.25));
+  }
+
+  .service-icon svg {
+    width: 45px;
+    height: 45px;
+    stroke: url(#gradIcon);
+    fill: none;
+    stroke-width: 1.5;
+    transition: all 0.3s ease;
+  }
+
+  .service-card:hover .service-icon svg {
+    stroke: var(--purple-dark);
+  }
+
+  .service-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    color: var(--text);
+  }
+
+  .service-desc {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  /* ── PRICING ── */
+  #pricing {
+    padding: 8rem 5vw;
+  }
+
+  .pricing-container {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .pricing-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+
+  .pricing-card {
+    background: rgba(255,255,255,0.25);
+    border: 1.5px solid rgba(255,255,255,0.5);
+    backdrop-filter: blur(10px);
+    border-radius: var(--radius);
+    padding: 2.5rem;
+    text-align: center;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    animation: slideInPricing 0.6s ease-out;
+  }
+
+  @keyframes slideInPricing {
+    from { opacity: 0; transform: translateX(50px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .pricing-card:nth-child(1) { animation-delay: 0.1s; }
+  .pricing-card:nth-child(2) { animation-delay: 0.2s; }
+  .pricing-card:nth-child(3) { animation-delay: 0.3s; }
+
+  .pricing-card:hover {
+    background: rgba(255,255,255,0.35);
+    border-color: rgba(255,255,255,0.7);
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 16px 48px rgba(139,127,212,0.25);
+  }
+
+  .pricing-icon {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--purple), var(--pink));
+    border-radius: 12px;
+    transition: all 0.3s ease;
+  }
+
+  .pricing-card:hover .pricing-icon {
+    transform: rotate(8deg) scale(1.1);
+  }
+
+  .pricing-icon svg {
+    width: 30px;
+    height: 30px;
+    fill: white;
+  }
+
+  .pricing-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 1rem 0 0.5rem;
+    color: var(--text);
+  }
+
+  .pricing-desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+  }
+
+  .pricing-price {
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--purple-dark), var(--pink-dark));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 1rem 0;
+  }
+
+  .pricing-unit {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+
+  .pricing-features {
+    list-style: none;
+    text-align: right;
+    margin: 2rem 0;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+
+  .pricing-features li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    transition: all 0.2s ease;
+  }
+
+  .pricing-features li::before {
+    content: '✓ ';
+    color: var(--purple);
+    font-weight: 700;
+    margin-left: 0.5rem;
+  }
+
+  .pricing-features li:hover {
+    color: var(--text);
+    transform: translateX(-5px);
+  }
+
+  .pricing-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, rgba(139,127,212,0.3), rgba(232,154,199,0.3));
+    border: 1.5px solid rgba(255,255,255,0.6);
+    color: var(--purple-dark);
+    padding: 0.8rem 2rem;
+    border-radius: 100px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Vazirmatn', sans-serif;
+  }
+
+  .pricing-cta:hover {
+    background: linear-gradient(135deg, rgba(139,127,212,0.5), rgba(232,154,199,0.5));
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(139,127,212,0.2);
+  }
+
+  /* ── PORTFOLIO ── */
+  #portfolio {
+    padding: 8rem 5vw;
+    background: rgba(255,255,255,0.15);
+    border-radius: var(--radius);
+    margin: 2rem 2vw;
+  }
+
+  .portfolio-container {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+
+  .portfolio-item {
+    position: relative;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: rgba(255,255,255,0.1);
+    aspect-ratio: 1;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    animation: zoomInPortfolio 0.6s ease-out;
+  }
+
+  @keyframes zoomInPortfolio {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  .portfolio-item:nth-child(1) { animation-delay: 0.1s; }
+  .portfolio-item:nth-child(2) { animation-delay: 0.2s; }
+  .portfolio-item:nth-child(3) { animation-delay: 0.3s; }
+  .portfolio-item:nth-child(4) { animation-delay: 0.4s; }
+  .portfolio-item:nth-child(5) { animation-delay: 0.5s; }
+  .portfolio-item:nth-child(6) { animation-delay: 0.6s; }
+
+  .portfolio-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background: linear-gradient(135deg, var(--purple), var(--pink));
+    transition: all 0.4s ease;
+  }
+
+  .portfolio-item:hover .portfolio-image {
+    transform: scale(1.1) rotate(2deg);
+  }
+
+  .portfolio-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, rgba(139,127,212,0.85), rgba(232,154,199,0.85));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    backdrop-filter: blur(5px);
+  }
+
+  .portfolio-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 16px 48px rgba(139,127,212,0.3);
+  }
+
+  .portfolio-item:hover .portfolio-overlay {
+    opacity: 1;
+  }
+
+  .portfolio-tag {
+    color: rgba(255,255,255,0.8);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    animation: slideInTag 0.4s ease-out;
+  }
+
+  .portfolio-name {
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 700;
+    animation: slideInTag 0.4s ease-out 0.1s backwards;
+  }
+
+  @keyframes slideInTag {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── WHY ── */
+  #why {
+    padding: 6rem 5vw;
+    background: rgba(255,255,255,0.15);
+    border-radius: var(--radius);
+    margin: 0 2vw;
+  }
+
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+
+  .why-card {
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.4);
+    backdrop-filter: blur(10px);
+    border-radius: var(--radius-sm);
+    padding: 2rem;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    overflow: hidden;
+    animation: fadeInUp 0.6s ease-out;
+  }
+
+  .why-card:nth-child(1) { animation-delay: 0.1s; }
+  .why-card:nth-child(2) { animation-delay: 0.2s; }
+  .why-card:nth-child(3) { animation-delay: 0.3s; }
+  .why-card:nth-child(4) { animation-delay: 0.4s; }
+  .why-card:nth-child(5) { animation-delay: 0.5s; }
+  .why-card:nth-child(6) { animation-delay: 0.6s; }
+
+  .why-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(139,127,212,0.3) 0%, transparent 70%);
+    opacity: 0;
+    transition: all 0.4s ease;
+    pointer-events: none;
+  }
+
+  .why-card:hover {
+    background: rgba(255,255,255,0.3);
+    border-color: rgba(255,255,255,0.6);
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 16px 48px rgba(139,127,212,0.2);
+  }
+
+  .why-card:hover::before {
+    opacity: 1;
+    top: -20%;
+    right: -20%;
+  }
+
+  .why-num {
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--purple-dark), var(--pink-dark));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1rem;
+    display: inline-block;
+    animation: slideInNum 0.6s ease-out;
+  }
+
+  @keyframes slideInNum {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .why-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+  }
+
+  .why-desc {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  /* ── BOOKING ── */
+  #booking {
+    padding: 8rem 5vw;
+  }
+
+  .booking-inner {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .booking-card {
+    background: rgba(255,255,255,0.25);
+    border: 1.5px solid rgba(255,255,255,0.5);
+    backdrop-filter: blur(10px);
+    border-radius: var(--radius);
+    padding: 3rem;
+    margin-top: 2rem;
+    transition: all 0.4s ease;
+    animation: slideInBooking 0.6s ease-out 0.2s backwards;
+  }
+
+  @keyframes slideInBooking {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .booking-card:hover {
+    background: rgba(255,255,255,0.35);
+    border-color: rgba(255,255,255,0.7);
+    box-shadow: 0 16px 48px rgba(139,127,212,0.15);
+  }
+
+  .booking-price {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, rgba(139,127,212,0.1), rgba(232,154,199,0.1));
+    border-radius: var(--radius-sm);
+    animation: priceAnimation 0.6s ease-out 0.3s backwards;
+  }
+
+  @keyframes priceAnimation {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  .price-from {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
+
+  .price-num {
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--purple-dark), var(--pink-dark));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .price-unit {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+
+  .booking-features {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .booking-features li {
+    padding: 0.75rem;
+    border-radius: var(--radius-sm);
+    background: rgba(255,255,255,0.15);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    animation: featureSlide 0.4s ease-out;
+  }
+
+  @keyframes featureSlide {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .booking-features li::before {
+    content: '✓';
+    color: var(--purple);
+    font-weight: 700;
+    font-size: 1.2rem;
+  }
+
+  .booking-features li:hover {
+    background: rgba(139,127,212,0.2);
+    transform: translateX(5px);
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .form-row.full { grid-template-columns: 1fr; }
+
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .form-full {
+    grid-column: 1 / -1;
+  }
+
+  .form-field label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .form-field input,
+  .form-field select,
+  .form-field textarea {
+    padding: 0.85rem 1.2rem;
+    border: 1.5px solid rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.15);
+    border-radius: var(--radius-sm);
+    font-family: 'Vazirmatn', sans-serif;
+    color: var(--text);
+    font-size: 0.9rem;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+  }
+
+  .form-field input::placeholder,
+  .form-field textarea::placeholder {
+    color: var(--text-muted);
+  }
+
+  .form-field input:focus,
+  .form-field select:focus,
+  .form-field textarea:focus {
+    outline: none;
+    background: rgba(255,255,255,0.25);
+    border-color: rgba(255,255,255,0.7);
+    box-shadow: 0 0 0 3px rgba(139,127,212,0.1);
+    transform: translateY(-2px);
+  }
+
+  .form-submit {
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(135deg, var(--purple-dark), var(--pink-dark));
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(139,127,212,0.3);
+  }
+
+  .form-submit::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: rgba(255,255,255,0.2);
+    transition: left 0.3s ease;
+    border-radius: inherit;
+  }
+
+  .form-submit:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(139,127,212,0.4);
+  }
+
+  .form-submit:hover::before {
+    left: 100%;
+  }
+
+  .form-submit:active {
+    transform: scale(0.98);
+  }
+
+  .btn-contact {
+    flex: 1; min-width: 150px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.85rem 1.5rem;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    border: 1.5px solid transparent;
+  }
+
+  .btn-telegram {
+    background: rgba(0,136,204,0.15);
+    color: #0088cc;
+    border-color: rgba(0,136,204,0.3);
+  }
+
+  .btn-telegram:hover {
+    background: rgba(0,136,204,0.25);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,136,204,0.2);
+  }
+
+  .btn-eitaa {
+    background: rgba(240,25,108,0.15);
+    color: #f0196c;
+    border-color: rgba(240,25,108,0.3);
+  }
+
+  .btn-eitaa:hover {
+    background: rgba(240,25,108,0.25);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(240,25,108,0.2);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 3rem 5vw;
+    background: rgba(255,255,255,0.1);
+    border-top: 1px solid rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 2rem;
+    animation: slideUpFooter 0.6s ease-out;
+  }
+
+  @keyframes slideUpFooter {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .footer-logo {
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--purple-dark), var(--pink-dark));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: transform 0.3s ease;
+  }
+
+  .footer-logo:hover {
+    transform: scale(1.05);
+  }
+
+  .footer-copy {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+
+  .footer-social {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .footer-social a {
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .footer-social a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--purple-dark), var(--pink-dark));
+    transition: width 0.3s ease;
+  }
+
+  .footer-social a:hover {
+    color: var(--purple-dark);
+  }
+
+  .footer-social a:hover::after {
+    width: 100%;
+  }
+
+  /* ── REVEAL ANIMATION ── */
+  .reveal {
+    opacity: 0;
+    animation: revealInPlace 0.6s ease-out forwards;
+  }
+
+  .reveal.visible {
+    animation: revealInPlace 0.6s ease-out;
+  }
+
+  @keyframes revealInPlace {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--purple-dark), var(--pink-dark));
+    border-radius: 2px;
+    animation: expandDivider 0.6s ease-out;
+  }
+
+  @keyframes expandDivider {
+    from { width: 0; opacity: 0; }
+    to { width: 60px; opacity: 1; }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 0.75rem 5vw; }
+    .nav-links { gap: 1rem; font-size: 0.75rem; }
+    #hero { padding: 6rem 5vw 3rem; }
+    h1 { font-size: clamp(1.8rem, 4vw, 2.5rem); }
+    .pricing-cards { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    footer { flex-direction: column; text-align: center; }
+    .booking-features { grid-template-columns: 1fr; }
+  }
+
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">AI Studio ✨</div>
+  <ul class="nav-links">
+    <li><a href="#services">خدمات</a></li>
+    <li><a href="#pricing">قیمت</a></li>
+    <li><a href="#portfolio">نمونه‌کار</a></li>
+    <li><a href="#why">چرا ما</a></li>
+  </ul>
+  <button class="nav-cta">رزرو نوبت</button>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-blob1"></div>
+  <div class="hero-blob2"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">🚀 هوش مصنوعی نسل نو</p>
+    <h1>ساخت سایت و پوستر بدون نیاز به کد</h1>
+    <p class="hero-sub">طراحی حرفه‌ای، کیفیت بالا، و کارایی نهایت با قدرت هوش مصنوعی</p>
+    <div class="hero-cta">
+      <button class="btn-glass btn-primary-glass">شروع رایگان</button>
+      <button class="btn-glass">بیشتر بدانید</button>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="services-container">
+    <div class="reveal">
+      <p class="section-label">خدمات</p>
+      <h2 class="section-title">ما چه کاری انجام می‌دهیم</h2>
+      <p class="section-sub">تمام نیازهای دیجیتال شما را با کیفیت بالا برطرف کنیم</p>
+    </div>
+    <div class="services reveal">
+      <div class="service-card">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+          </svg>
+        </div>
+        <h3 class="service-title">طراحی سایت</h3>
+        <p class="service-desc">سایت‌های حرفه‌ای، سریع و موبایل‌فرندلی که تبدیل بازدیدکننده به مشتری می‌کند</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-5.04-6.71l-2.75 3.54-2.08-2.61c-.3-.38-.86-.38-1.16 0l-1.87 2.37c-.3.38-.07.96.41.96h13.42c.48 0 .71-.58.41-.96l-3.91-4.94c-.3-.38-.86-.38-1.16 0z"/>
+          </svg>
+        </div>
+        <h3 class="service-title">طراحی پوستر</h3>
+        <p class="service-desc">پوسترها و تصاویری تبلیغاتی دیدنی که توجه مخاطب را جلب می‌کند</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
+          </svg>
+        </div>
+        <h3 class="service-title">هویت بصری</h3>
+        <p class="service-desc">طراحی لوگو، رنگ‌شناسی و راهنمای سبک یکپارچه برای برند شما</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="pricing-container">
+    <div class="reveal">
+      <p class="section-label">قیمت‌گذاری</p>
+      <h2 class="section-title">بسته‌های طراحی</h2>
+      <p class="section-sub">انتخاب بسته‌ای متناسب با نیاز و بودجه‌ی شما</p>
+    </div>
+    <div class="pricing-cards reveal">
+      <div class="pricing-card">
+        <div class="pricing-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+        </div>
+        <h3 class="pricing-title">سایت ساده</h3>
+        <p class="pricing-desc">برای کسب و کارهای کوچک</p>
+        <div class="pricing-price">۱۰۰<span class="pricing-unit">هزار تومان</span></div>
+        <ul class="pricing-features">
+          <li>۵ صفحه</li>
+          <li>موبایل‌فرندلی</li>
+          <li>۲۴ ساعت</li>
+        </ul>
+        <button class="pricing-cta">انتخاب بسته</button>
+      </div>
+      <div class="pricing-card">
+        <div class="pricing-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+        </div>
+        <h3 class="pricing-title">سایت کامل</h3>
+        <p class="pricing-desc">برای کسب و کارهای متوسط</p>
+        <div class="pricing-price">۲۵۰<span class="pricing-unit">هزار تومان</span></div>
+        <ul class="pricing-features">
+          <li>۱۰ صفحه</li>
+          <li>بلاگ</li>
+          <li>۴۸ ساعت</li>
+        </ul>
+        <button class="pricing-cta">انتخاب بسته</button>
+      </div>
+      <div class="pricing-card">
+        <div class="pricing-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+        </div>
+        <h3 class="pricing-title">سایت حرفه‌ای</h3>
+        <p class="pricing-desc">برای کسب و کارهای بزرگ</p>
+        <div class="pricing-price">۵۰۰<span class="pricing-unit">هزار تومان</span></div>
+        <ul class="pricing-features">
+          <li>۲۰+ صفحه</li>
+          <li>فروشگاه</li>
+          <li>۷۲ ساعت</li>
+        </ul>
+        <button class="pricing-cta">انتخاب بسته</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section id="portfolio">
+  <div class="portfolio-container">
+    <div class="reveal">
+      <p class="section-label">نمونه‌کار</p>
+      <h2 class="section-title">پروژه‌های انجام‌شده</h2>
+      <p class="section-sub">نمونه‌هایی از سایت‌ها و پوسترهایی که برای کلاینت‌های ما ساخته‌ایم</p>
+    </div>
+    <div class="portfolio-grid reveal">
+      <div class="portfolio-item">
+        <div class="portfolio-image"></div>
+        <div class="portfolio-overlay">
+          <p class="portfolio-tag">طراحی سایت</p>
+          <p class="portfolio-name">فروشگاه مد</p>
+        </div>
+      </div>
+      <div class="portfolio-item">
+        <div class="portfolio-image"></div>
+        <div class="portfolio-overlay">
+          <p class="portfolio-tag">طراحی سایت</p>
+          <p class="portfolio-name">کلینیک دندان‌پزشکی</p>
+        </div>
+      </div>
+      <div class="portfolio-item">
+        <div class="portfolio-image"></div>
+        <div class="portfolio-overlay">
+          <p class="portfolio-tag">طراحی پوستر</p>
+          <p class="portfolio-name">پوستر فروش</p>
+        </div>
+      </div>
+      <div class="portfolio-item">
+        <div class="portfolio-image"></div>
+        <div class="portfolio-overlay">
+          <p class="portfolio-tag">طراحی سایت</p>
+          <p class="portfolio-name">رستوران لاکچری</p>
+        </div>
+      </div>
+      <div class="portfolio-item">
+        <div class="portfolio-image"></div>
+        <div class="portfolio-overlay">
+          <p class="portfolio-tag">طراحی سایت</p>
+          <p class="portfolio-name">پالایشگاه رنگ</p>
+        </div>
+      </div>
+      <div class="portfolio-item">
+        <div class="portfolio-image"></div>
+        <div class="portfolio-overlay">
+          <p class="portfolio-tag">پوستر تبلیغاتی</p>
+          <p class="portfolio-name">پوستر حفظ قرآن</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section id="why" style="padding: 6rem 5vw; background: rgba(255,255,255,0.15); border-radius: var(--radius); margin: 0 2vw;">
+  <div style="max-width:1100px; margin:0 auto;">
+    <div class="reveal" style="text-align:center; max-width:560px; margin:0 auto 0;">
+      <p class="section-label">چرا ما؟</p>
+      <h2 class="section-title">مزیت‌های همکاری با AI Studio</h2>
+    </div>
+    <div class="why-grid reveal">
+      <div class="why-card"><div class="why-num">۰۱</div><p class="why-title">تحویل ۴۸ ساعته</p><p class="why-desc">با قدرت هوش مصنوعی، پروژه شما در کوتاه‌ترین زمان ممکن آماده تحویل است.</p></div>
+      <div class="why-card"><div class="why-num">۰۲</div><p class="why-title">طراحی اختصاصی</p><p class="why-desc">هر پروژه کاملاً منحصربه‌فرد طراحی می‌شود؛ بدون قالب‌های تکراری.</p></div>
+      <div class="why-card"><div class="why-num">۰۳</div><p class="why-title">قیمت مناسب</p><p class="why-desc">با بهره‌گیری از ابزارهای AI، کیفیت بالا را با هزینه‌ای کمتر تجربه کنید.</p></div>
+      <div class="why-card"><div class="why-num">۰۴</div><p class="why-title">پشتیبانی کامل</p><p class="why-desc">پس از تحویل، تیم ما همراه شماست تا هر تغییری اعمال شود.</p></div>
+      <div class="why-card"><div class="why-num">۰۵</div><p class="why-title">موبایل‌فرندلی</p><p class="why-desc">تمامی سایت‌ها برای نمایش ایده‌آل در موبایل بهینه‌سازی می‌شوند.</p></div>
+      <div class="why-card"><div class="why-num">۰۶</div><p class="why-title">تجربه‌ی کاربری قوی</p><p class="why-desc">طراحی مشتری‌محور که بازدیدکننده را به مشتری تبدیل می‌کند.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section id="booking">
+  <div class="booking-inner">
+    <div class="reveal">
+      <p class="section-label">رزرو نوبت</p>
+      <h2 class="section-title">امروز شروع کنید</h2>
+      <div class="divider" style="margin:1rem auto;"></div>
+      <p class="section-sub" style="margin:0 auto;">فرم زیر را پر کنید تا یک مشاوره رایگان داشته باشیم و پروژه‌ی شما را آغاز کنیم.</p>
+    </div>
+    <div class="booking-card reveal">
+      <div class="booking-price">
+        <span class="price-from">شروع قیمت از</span>
+        <span class="price-num">۵۰<span class="price-unit">هزار تومان</span></span>
+      </div>
+      <ul class="booking-features">
+        <li>طراحی اختصاصی</li><li>تحویل سریع</li>
+        <li>موبایل‌فرندلی</li><li>ویرایش رایگان</li>
+        <li>فایل‌های اصلی</li><li>پشتیبانی ۷ روزه</li>
+      </ul>
+      <div class="form-row">
+        <div class="form-field"><label>نام و نام خانوادگی</label><input type="text" placeholder="علی رضایی"></div>
+        <div class="form-field"><label>شماره تماس</label><input type="tel" placeholder="09xx xxx xxxx"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-field"><label>نوع کسب‌وکار</label><input type="text" placeholder="رستوران، کلینیک..."></div>
+        <div class="form-field"><label>نوع خدمت</label>
+          <select><option value="">انتخاب کنید</option><option>طراحی سایت</option><option>طراحی پوستر</option><option>هر دو</option><option>هویت بصری</option></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-field form-full"><label>توضیحات پروژه</label><textarea rows="3" placeholder="درباره کسب‌وکار و نیازتان بنویسید..."></textarea></div>
+      </div>
+      <button class="form-submit" onclick="sendToBot()">ثبت سفارش ✦</button>
+      <div id="form-status" style="margin-top:1rem;text-align:center;font-size:0.85rem;display:none;"></div>
+      <div style="display:flex;gap:1rem;margin-top:1rem;flex-wrap:wrap;">
+        <a href="https://t.me/mohammadmirzaie13873959" target="_blank" class="btn-contact btn-telegram">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.941z"/></svg>
+          تماس در تلگرام
+        </a>
+        <a href="https://eitaa.com/mohammadmirzaie1387" target="_blank" class="btn-contact btn-eitaa">
+          <svg width="20" height="20" viewBox="0 0 100 100" fill="currentColor"><circle cx="50" cy="50" r="45"/><path fill="white" d="M30 35h40v8H30zm0 11h40v8H30zm0 11h25v8H30z"/></svg>
+          تماس در ایتا
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-logo">AI Studio</span>
+  <span class="footer-copy">© ۱۴۰۴ — تمامی حقوق محفوظ است</span>
+  <div class="footer-social">
+    <a href="https://t.me/mohammadmirzaie13873959" target="_blank">تلگرام</a>
+    <a href="https://eitaa.com/mohammadmirzaie1387" target="_blank">ایتا</a>
+    <a href="#">اینستاگرام</a>
+  </div>
+</footer>
+
+<script>
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Telegram Bot API
+  const BOT_TOKEN = ['8886638574','AAFBxVu-PreNeFSFv46BIq4BzFUpYUdFsBM'].join(':');
+  const CHAT_ID   = '8054751209';
+
+  async function sendToBot() {
+    const name     = document.querySelectorAll('input[type="text"]')[0].value.trim();
+    const phone    = document.querySelector('input[type="tel"]').value.trim();
+    const business = document.querySelectorAll('input[type="text"]')[1].value.trim();
+    const service  = document.querySelector('select').value;
+    const desc     = document.querySelector('textarea').value.trim();
+
+    if (!name || !phone) {
+      showStatus('⚠️ لطفاً نام و شماره تماس را وارد کنید', '#e2a020');
+      return;
+    }
+
+    const btn = document.querySelector('.form-submit');
+    btn.textContent = 'در حال ارسال...';
+    btn.disabled = true;
+
+    const text =
+      `🔔 سفارش جدید از سایت\n\n` +
+      `👤 نام: ${name}\n` +
+      `📞 تماس: ${phone}\n` +
+      `🏢 کسب‌وکار: ${business || '—'}\n` +
+      `🛠 خدمت: ${service || '—'}\n` +
+      `📝 توضیحات: ${desc || '—'}`;
+
+    try {
+      const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chat_id: CHAT_ID, text })
+      });
+      const data = await res.json();
+      if (data.ok) {
+        btn.textContent = '✓ سفارش ثبت شد!';
+        showStatus('✅ سفارش شما با موفقیت ثبت شد. به زودی تماس می‌گیریم.', '#4caf7d');
+        document.querySelectorAll('input, textarea, select').forEach(el => el.value = '');
+      } else {
+        throw new Error('failed');
+      }
+    } catch(e) {
+      btn.textContent = 'ثبت سفارش ✦';
+      btn.disabled = false;
+      showStatus('❌ خطا در ارسال. لطفاً از طریق تلگرام تماس بگیرید.', '#e25050');
+    }
+  }
+
+  function showStatus(msg, color) {
+    const el = document.getElementById('form-status');
+    el.textContent = msg;
+    el.style.color = color;
+    el.style.display = 'block';
+  }
+
+</script>
+</body>
+</html>
